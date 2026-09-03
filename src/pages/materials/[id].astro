@@ -1,0 +1,76 @@
+---
+import { getCollection, render } from 'astro:content';
+import PageShell from '../../layouts/PageShell.astro';
+import { siteName } from '../../lib/ui';
+import { formatJaDate } from '../../lib/blog';
+
+export async function getStaticPaths() {
+	const items = await getCollection('materials');
+	return items.map((item) => ({
+		params: { id: item.id },
+		props: { item },
+	}));
+}
+
+const { item } = Astro.props;
+const { Content } = await render(item);
+
+const isPdf = (url: string) => url.toLowerCase().endsWith('.pdf');
+---
+
+<PageShell
+	description={item.data.description ?? `${item.data.event}の資料です。`}
+	title={`${item.data.title} | ${siteName}`}
+>
+	<article class="pt-16 pb-16">
+		<a class="font-mono text-[0.82rem] text-neon-cyan no-underline hover:underline" href="/materials">← 資料一覧</a>
+		<header class="mt-6 mb-10 border-b border-neon-cyan/10 pb-8">
+			<p class="font-mono text-[0.8rem] text-ink-muted">
+				{formatJaDate(item.data.date)} ・ {item.data.event}
+			</p>
+			<h1
+				class="mt-2 font-display text-[clamp(1.7rem,4vw,2.4rem)] font-black tracking-tight text-ink [text-shadow:0_0_10px_rgba(0,240,255,0.4)]"
+			>
+				{item.data.title}
+			</h1>
+		</header>
+
+		<div class="prose-cyber mx-auto max-w-[680px]">
+			<Content />
+		</div>
+
+		<div class="mx-auto mt-10 flex max-w-[680px] flex-col gap-8">
+			{
+				item.data.files.map((file) =>
+					isPdf(file.url) ? (
+						<div>
+							<p class="mb-2 font-mono text-[0.85rem] text-ink">{file.label}</p>
+							<iframe
+								class="h-[80vh] w-full rounded border border-neon-cyan/20 bg-bg-card"
+								src={file.url}
+								title={file.label}
+							/>
+							<a
+								class="mt-2 inline-block font-mono text-[0.78rem] text-neon-cyan no-underline hover:underline"
+								href={file.url}
+								rel="noreferrer"
+								target="_blank"
+							>
+								表示されない場合はこちら ↗
+							</a>
+						</div>
+					) : (
+						<a
+							class="inline-flex items-center gap-1.5 font-mono text-[0.85rem] text-neon-cyan no-underline hover:underline"
+							href={file.url}
+							rel="noreferrer"
+							target="_blank"
+						>
+							{file.label} ↗
+						</a>
+					),
+				)
+			}
+		</div>
+	</article>
+</PageShell>
