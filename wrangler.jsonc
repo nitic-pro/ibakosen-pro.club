@@ -6,5 +6,6 @@
 	"assets": {
 		"directory": "./dist",
 		"binding": "ASSETS"
-	}
+	},
+	"routes": [{ "pattern": "ibakosen-pro.club.fukayatti0.dev", "custom_domain": true }]
 }
