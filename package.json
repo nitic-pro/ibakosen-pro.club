@@ -7,10 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/convert-pdfs.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "astro build && wrangler deploy"
+    "deploy": "bun run build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.8",
@@ -30,6 +31,8 @@
     "esbuild": true
   },
   "devDependencies": {
+    "@napi-rs/canvas": "^1.0.8",
+    "gray-matter": "^4.0.3",
     "wrangler": "^4.128.0"
   }
 }

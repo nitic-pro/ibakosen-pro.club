@@ -1,6 +1,9 @@
 # build output
 dist/
 
+# PDF pages pre-rendered to JPEG by scripts/convert-pdfs.mjs (regenerated on every build)
+public/materials/.generated/
+
 # generated types
 .astro/
 

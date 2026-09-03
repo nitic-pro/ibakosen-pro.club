@@ -1,4 +1,6 @@
 ---
+import { existsSync, readdirSync } from 'node:fs';
+import { basename, join } from 'node:path';
 import { getCollection, render } from 'astro:content';
 import PageShell from '../../layouts/PageShell.astro';
 import { siteName } from '../../lib/ui';
@@ -17,6 +19,19 @@ const { Content } = await render(item);
 
 const isPdf = (url: string) => url.toLowerCase().endsWith('.pdf');
 const isImage = (url: string) => /\.(jpe?g|png|webp|gif)$/i.test(url);
+
+// scripts/convert-pdfs.mjs pre-renders PDF pages to JPEG at build time (see
+// package.json's "prebuild" script). Prefer those static images -- they're
+// far more reliable than rendering the PDF live in the visitor's browser --
+// and only fall back to the client-side viewer if that step hasn't run yet.
+function getGeneratedPdfPages(url: string): string[] {
+	const dir = join(process.cwd(), 'public/materials/.generated', basename(url, '.pdf'));
+	if (!existsSync(dir)) return [];
+	return readdirSync(dir)
+		.filter((name) => /^page-\d+\.jpg$/.test(name))
+		.sort((a, b) => Number(a.match(/\d+/)![0]) - Number(b.match(/\d+/)![0]))
+		.map((name) => `/materials/.generated/${basename(url, '.pdf')}/${name}`);
+}
 ---
 
 <PageShell
@@ -58,21 +73,40 @@ const isImage = (url: string) => /\.(jpe?g|png|webp|gif)$/i.test(url);
 					}
 
 					if (isPdf(file.url)) {
+						const generatedPages = getGeneratedPdfPages(file.url);
 						return (
 							<div class="card-corners relative rounded border border-neon-cyan/20 bg-bg-card/60 p-4">
 								<p class="mb-3 font-mono text-[0.85rem] text-ink">{file.label}</p>
-								<div class="flex flex-col items-center gap-4" data-pdf-src={file.url} data-pdf-viewer>
-									<p class="pdf-status font-mono text-[0.8rem] text-neon-cyan">
-										<span class="animate-pulse-dot">読み込み中...</span>
-									</p>
-								</div>
+								{generatedPages.length > 0 ? (
+									<div class="flex flex-col items-center gap-4">
+										{generatedPages.map((src, i) => (
+											<div class="flex w-full flex-col items-center gap-1.5">
+												<img
+													alt={`${file.label} - ${i + 1}ページ目`}
+													class="w-full rounded border border-neon-cyan/15 shadow-[0_4px_24px_rgba(0,240,255,0.12)]"
+													loading="lazy"
+													src={src}
+												/>
+												<p class="font-mono text-[0.72rem] text-ink-muted">
+													{i + 1} / {generatedPages.length}
+												</p>
+											</div>
+										))}
+									</div>
+								) : (
+									<div class="flex flex-col items-center gap-4" data-pdf-src={file.url} data-pdf-viewer>
+										<p class="pdf-status font-mono text-[0.8rem] text-neon-cyan">
+											<span class="animate-pulse-dot">読み込み中...</span>
+										</p>
+									</div>
+								)}
 								<a
 									class="mt-3 inline-block font-mono text-[0.78rem] text-neon-cyan no-underline hover:underline"
 									href={file.url}
 									rel="noreferrer"
 									target="_blank"
 								>
-									新しいタブで開く ↗
+									元のPDFを開く ↗
 								</a>
 							</div>
 						);
