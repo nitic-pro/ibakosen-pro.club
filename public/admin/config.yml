@@ -99,7 +99,10 @@ collections:
               name: 'url',
               widget: 'file',
               choose_url: true,
-              media_folder: 'public/materials',
+              # A leading "/" makes this relative to the repo root instead of
+              # relative to this collection's own folder (src/content/materials) --
+              # without it, uploads land inside src/content/materials/public/materials.
+              media_folder: '/public/materials',
               public_folder: '/materials',
             }
 
