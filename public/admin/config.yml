@@ -88,7 +88,7 @@ collections:
       - { label: 'タイトル', name: 'title', widget: 'string' }
       - { label: '大会・発表会名', name: 'event', widget: 'string' }
       - { label: '日付', name: 'date', widget: 'datetime' }
-      - { label: '説明', name: 'description', widget: 'text', required: false }
+      - { label: '説明 (Markdown対応)', name: 'description', widget: 'markdown', required: false }
       - label: 'ファイル・リンク'
         name: 'files'
         widget: 'list'

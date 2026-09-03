@@ -5,6 +5,7 @@ import { getCollection, render } from 'astro:content';
 import PageShell from '../../layouts/PageShell.astro';
 import { siteName } from '../../lib/ui';
 import { formatJaDate } from '../../lib/blog';
+import { renderMarkdown, stripMarkdown } from '../../lib/markdown';
 
 export async function getStaticPaths() {
 	const items = await getCollection('materials');
@@ -35,7 +36,7 @@ function getGeneratedPdfPages(url: string): string[] {
 ---
 
 <PageShell
-	description={item.data.description ?? `${item.data.event}の資料です。`}
+	description={item.data.description ? stripMarkdown(item.data.description) : `${item.data.event}の資料です。`}
 	title={`${item.data.title} | ${siteName}`}
 >
 	<article class="pt-16 pb-16">
@@ -52,6 +53,7 @@ function getGeneratedPdfPages(url: string): string[] {
 		</header>
 
 		<div class="prose-cyber mx-auto max-w-[680px]">
+			{item.data.description && <Fragment set:html={renderMarkdown(item.data.description)} />}
 			<Content />
 		</div>
 
