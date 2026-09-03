@@ -14,6 +14,11 @@ interface Env {
 	GITHUB_CLIENT_SECRET: string;
 }
 
+// The repo Decap CMS commits to. Only GitHub users with push (write) access
+// to this repo are allowed to complete login.
+const REPO_OWNER = 'nitic-pro';
+const REPO_NAME = 'ibakosen-pro.club';
+
 function renderCallbackBody(status: 'success' | 'error', content: unknown): string {
 	return `
 	<script>
@@ -64,6 +69,32 @@ async function handleCallback(request: Request, env: Env): Promise<Response> {
 			headers: { 'content-type': 'text/html;charset=UTF-8' },
 			status: 401,
 		});
+	}
+
+	// Gate login on write access to the content repo -- this endpoint works for
+	// any authenticated user (the repo is public), and the "permissions" field
+	// it returns reflects *this* user's own access level, so no special
+	// privilege is needed just to check.
+	const repoResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+		headers: {
+			authorization: `Bearer ${result.access_token}`,
+			'user-agent': 'ibakosen-pro-club-decap-oauth',
+			accept: 'application/vnd.github+json',
+		},
+	});
+	const repoData = (await repoResponse.json()) as { permissions?: { push?: boolean } };
+
+	if (!repoData.permissions?.push) {
+		return new Response(
+			renderCallbackBody('error', {
+				error: 'access_denied',
+				error_description: 'このリポジトリへの書き込み権限がありません。管理者に追加を依頼してください。',
+			}),
+			{
+				headers: { 'content-type': 'text/html;charset=UTF-8' },
+				status: 403,
+			},
+		);
 	}
 
 	const body = renderCallbackBody('success', { token: result.access_token, provider: 'github' });
