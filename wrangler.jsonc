@@ -1,7 +1,7 @@
 {
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "ibakosen-pro-club",
-	"compatibility_date": "2026-09-04",
+	"compatibility_date": "2026-09-01",
 	"main": "./worker/index.ts",
 	"assets": {
 		"directory": "./dist",
