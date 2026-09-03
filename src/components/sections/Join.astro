@@ -1,0 +1,53 @@
+---
+import { Icon } from 'astro-icon/components';
+import { btnBaseClass, cardClass, sectionClass } from '../../lib/ui';
+
+const schedule = [
+	{ when: '毎週火曜 放課後', what: '部室にて各々活動' },
+	{ when: '不定期', what: 'ハッカソン・コンテスト参加' },
+];
+---
+
+<section class={`${sectionClass} !border-t-0 text-center`} id="join">
+	<div class={`${cardClass} mx-auto max-w-[640px] text-left`}>
+		<p class="text-[0.95rem] text-ink">
+			入部はいつでも歓迎です。プログラミング経験がなくても大丈夫、活動しながら覚えていけます。
+		</p>
+		<p class="mt-4 flex items-start gap-2 font-mono text-[0.85rem] text-ink-muted">
+			<Icon class="mt-0.5 h-4 w-4 shrink-0 text-neon-cyan" name="lucide:map-pin" />
+			<span>茨城工業高等専門学校 学術総合情報センター 電子計算機演習室</span>
+		</p>
+		<ul class="mt-2 list-none p-0 font-mono text-[0.85rem] text-ink-muted">
+			{
+				schedule.map((s) => (
+					<li class="flex items-start gap-2">
+						<Icon class="mt-0.5 h-4 w-4 shrink-0 text-neon-cyan" name="lucide:calendar" />
+						<span class="flex flex-wrap items-baseline gap-x-2">
+							<span class="font-bold text-neon-cyan">{s.when}</span>
+							<span>{s.what}</span>
+						</span>
+					</li>
+				))
+			}
+		</ul>
+		<ul class="mt-4.5 list-none p-0 font-mono text-[0.88rem] text-ink-muted">
+			<li class="relative mb-2 pl-6 before:absolute before:left-0 before:text-neon-green before:content-['>']">
+				見学だけでも大歓迎です
+			</li>
+			<li class="relative mb-2 pl-6 before:absolute before:left-0 before:text-neon-green before:content-['>']">
+				PCの持参は不要（部室に貸出用PCあり）
+			</li>
+			<li class="relative mb-2 pl-6 before:absolute before:left-0 before:text-neon-green before:content-['>']">
+				興味のある分野だけ参加してもOK
+			</li>
+		</ul>
+		<div class="mt-6 flex flex-wrap justify-start gap-4">
+			<a
+				class={`${btnBaseClass} bg-neon-cyan text-bg shadow-[0_0_18px_rgba(0,240,255,0.55)] hover:shadow-[0_0_28px_rgba(0,240,255,0.85)]`}
+				href="mailto:info@example.com"
+			>
+				お問い合わせ
+			</a>
+		</div>
+	</div>
+</section>

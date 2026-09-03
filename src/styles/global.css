@@ -1,0 +1,228 @@
+@import 'tailwindcss';
+
+@theme {
+	--font-display: var(--font-orbitron), 'Yu Gothic', sans-serif;
+	--font-mono: var(--font-jetbrains-mono), ui-monospace, 'Cascadia Code', monospace;
+	--font-akihabara: var(--font-akihabara-src), 'Yu Gothic', sans-serif;
+
+	--color-bg: #05070d;
+	--color-bg-soft: #0b0f1a;
+	--color-bg-card: #0d1220;
+	--color-neon-cyan: #00f0ff;
+	--color-neon-magenta: #ff2ee6;
+	--color-neon-green: #39ff88;
+	--color-ink: #e8f3ff;
+	--color-ink-muted: #7c8aa5;
+
+	--animate-grid-drift: grid-drift 18s linear infinite;
+	--animate-blink: blink 1s step-end infinite;
+	--animate-pulse-dot: pulse-dot 1.6s ease-in-out infinite;
+
+	@keyframes grid-drift {
+		from {
+			background-position: 0 0;
+		}
+		to {
+			background-position: 42px 42px;
+		}
+	}
+
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+
+	@keyframes pulse-dot {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.3;
+		}
+	}
+}
+
+@layer base {
+	html,
+	body {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		min-height: 100%;
+	}
+
+	body {
+		position: relative;
+		background: var(--color-bg);
+		color: var(--color-ink);
+		font-family: var(--font-mono), 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+		line-height: 1.7;
+		overflow-x: hidden;
+	}
+
+	::selection {
+		background: var(--color-neon-magenta);
+		color: var(--color-bg);
+	}
+}
+
+@layer components {
+	/* animated grid floor */
+	.bg-grid-floor {
+		position: fixed;
+		inset: 0;
+		z-index: -3;
+		background-image:
+			linear-gradient(rgba(0, 240, 255, 0.09) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(0, 240, 255, 0.09) 1px, transparent 1px);
+		background-size: 42px 42px;
+		mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+	}
+
+	.bg-noise-glow {
+		position: fixed;
+		inset: 0;
+		z-index: -2;
+		pointer-events: none;
+		background:
+			radial-gradient(600px circle at 15% 10%, rgba(255, 46, 230, 0.16), transparent 55%),
+			radial-gradient(700px circle at 85% 25%, rgba(0, 240, 255, 0.14), transparent 55%),
+			radial-gradient(500px circle at 50% 90%, rgba(57, 255, 136, 0.08), transparent 60%);
+	}
+
+	/* CRT scanline overlay */
+	.bg-scanlines {
+		position: fixed;
+		inset: 0;
+		z-index: 50;
+		pointer-events: none;
+		background: repeating-linear-gradient(
+			to bottom,
+			rgba(255, 255, 255, 0.025) 0px,
+			rgba(255, 255, 255, 0.025) 1px,
+			transparent 2px,
+			transparent 3px
+		);
+		mix-blend-mode: overlay;
+	}
+
+	/* cyberpunk corner brackets on cards */
+	.card-corners::before,
+	.card-corners::after {
+		content: '';
+		position: absolute;
+		width: 18px;
+		height: 18px;
+		opacity: 0.7;
+	}
+
+	.card-corners::before {
+		top: 0;
+		left: 0;
+		border-top: 2px solid var(--color-neon-cyan);
+		border-left: 2px solid var(--color-neon-cyan);
+	}
+
+	.card-corners::after {
+		bottom: 0;
+		right: 0;
+		border-bottom: 2px solid var(--color-neon-magenta);
+		border-right: 2px solid var(--color-neon-magenta);
+	}
+
+	/* angled cyberpunk button */
+	.clip-cyber {
+		clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+	}
+
+	/* typography for rendered MDX blog post bodies */
+	.prose-cyber {
+		color: var(--color-ink);
+		font-size: 0.98rem;
+		line-height: 1.85;
+	}
+
+	.prose-cyber > * + * {
+		margin-top: 1.25em;
+	}
+
+	.prose-cyber h2 {
+		font-family: var(--font-display);
+		font-size: 1.4rem;
+		font-weight: 700;
+		color: var(--color-ink);
+		margin-top: 2em;
+	}
+
+	.prose-cyber h3 {
+		font-family: var(--font-display);
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: var(--color-ink);
+		margin-top: 1.75em;
+	}
+
+	.prose-cyber p {
+		color: var(--color-ink-muted);
+	}
+
+	.prose-cyber a {
+		color: var(--color-neon-cyan);
+		text-decoration: none;
+	}
+
+	.prose-cyber a:hover {
+		text-decoration: underline;
+	}
+
+	.prose-cyber strong {
+		color: var(--color-ink);
+	}
+
+	.prose-cyber ul,
+	.prose-cyber ol {
+		color: var(--color-ink-muted);
+		padding-left: 1.4em;
+	}
+
+	.prose-cyber li + li {
+		margin-top: 0.4em;
+	}
+
+	.prose-cyber blockquote {
+		border-left: 3px solid var(--color-neon-cyan);
+		padding-left: 1em;
+		color: var(--color-ink-muted);
+		font-style: italic;
+	}
+
+	.prose-cyber code {
+		font-family: var(--font-mono);
+		font-size: 0.88em;
+		color: var(--color-neon-green);
+		background: var(--color-bg-card);
+		padding: 0.15em 0.4em;
+		border-radius: 4px;
+	}
+
+	.prose-cyber pre {
+		font-family: var(--font-mono);
+		background: var(--color-bg-card);
+		border: 1px solid rgba(0, 240, 255, 0.15);
+		border-radius: 6px;
+		padding: 1em;
+		overflow-x: auto;
+	}
+
+	.prose-cyber pre code {
+		background: none;
+		padding: 0;
+	}
+
+	.prose-cyber hr {
+		border: none;
+		border-top: 1px solid rgba(0, 240, 255, 0.15);
+	}
+}

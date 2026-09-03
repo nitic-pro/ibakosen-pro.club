@@ -1,0 +1,128 @@
+# Decap CMS config. Field definitions here are kept in sync by hand with the
+# zod schemas in src/content.config.ts -- if you change one, update the other.
+
+backend:
+  name: github
+  # TODO: replace with the real "owner/repo" once this is pushed to GitHub.
+  repo: nitic-pro/nitic-pro
+  branch: main
+  # TODO: replace with the real production domain once the site is deployed.
+  site_domain: https://example.com
+  base_url: https://example.com
+  auth_endpoint: /api/auth
+
+# Fallback media location for any field that doesn't override it below.
+media_folder: 'public/uploads'
+public_folder: '/uploads'
+
+collections:
+  - name: 'achievements'
+    label: '実績'
+    folder: 'src/content/achievements'
+    create: true
+    extension: 'mdx'
+    format: 'frontmatter'
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: '年', name: 'year', widget: 'number', value_type: 'int' }
+      - { label: 'タイトル', name: 'title', widget: 'string' }
+      - { label: '結果', name: 'result', widget: 'string' }
+      - { label: '説明', name: 'description', widget: 'text' }
+      - {
+          label: '公式サイトURL',
+          name: 'event_website',
+          widget: 'string',
+          required: false,
+        }
+      - {
+          label: '追加リンク',
+          name: 'link',
+          widget: 'string',
+          required: false,
+          hint: 'Markdownリンク形式で入力: [表示テキスト](https://example.com)',
+          pattern: ['^\[.+\]\(\S+\)$', 'Markdownリンク形式で入力: [表示テキスト](https://example.com)']
+        }
+      - {
+          label: '開始日',
+          name: 'startDate',
+          widget: 'string',
+          required: false,
+          hint: '日単位なら YYYY-MM-DD、月単位なら YYYY-MM',
+          pattern: ['^\d{4}-\d{2}(-\d{2})?$', 'YYYY-MM-DD または YYYY-MM の形式で入力してください']
+        }
+      - {
+          label: '終了日',
+          name: 'endDate',
+          widget: 'string',
+          required: false,
+          hint: '複数日/複数月にまたがる場合のみ入力',
+          pattern: ['^\d{4}-\d{2}(-\d{2})?$', 'YYYY-MM-DD または YYYY-MM の形式で入力してください']
+        }
+
+  - name: 'blog'
+    label: 'ブログ'
+    folder: 'src/content/blog'
+    create: true
+    extension: 'mdx'
+    format: 'frontmatter'
+    slug: '{{slug}}'
+    fields:
+      - { label: 'タイトル', name: 'title', widget: 'string' }
+      - { label: '説明', name: 'description', widget: 'text' }
+      - { label: '公開日', name: 'pubDate', widget: 'datetime' }
+      - { label: 'タグ', name: 'tags', widget: 'list', default: [] }
+      - { label: '本文', name: 'body', widget: 'markdown' }
+
+  - name: 'materials'
+    label: '資料'
+    folder: 'src/content/materials'
+    create: true
+    extension: 'mdx'
+    format: 'frontmatter'
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: 'タイトル', name: 'title', widget: 'string' }
+      - { label: '大会・発表会名', name: 'event', widget: 'string' }
+      - { label: '日付', name: 'date', widget: 'datetime' }
+      - { label: '説明', name: 'description', widget: 'text', required: false }
+      - label: 'ファイル・リンク'
+        name: 'files'
+        widget: 'list'
+        fields:
+          - { label: '表示名', name: 'label', widget: 'string' }
+          - {
+              label: 'ファイル (PDFアップロード可) / URL',
+              name: 'url',
+              widget: 'file',
+              choose_url: true,
+              media_folder: 'public/materials',
+              public_folder: '/materials',
+            }
+
+  - name: 'events'
+    label: 'イベント'
+    folder: 'src/content/events'
+    create: true
+    extension: 'mdx'
+    format: 'frontmatter'
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: '名称', name: 'name', widget: 'string' }
+
+  - name: 'competitions'
+    label: '大会'
+    folder: 'src/content/competitions'
+    create: true
+    extension: 'mdx'
+    format: 'frontmatter'
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: '名称', name: 'name', widget: 'string' }

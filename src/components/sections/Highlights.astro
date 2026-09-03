@@ -1,0 +1,39 @@
+---
+import { Icon } from 'astro-icon/components';
+import { cardClass, sectionClass } from '../../lib/ui';
+
+const links = [
+	{
+		href: '/about',
+		icon: 'lucide:wrench',
+		title: '同好会について',
+		desc: '活動内容・使用技術・活動日程はこちら',
+	},
+	{
+		href: '/achievements',
+		icon: 'lucide:trophy',
+		title: 'イベント・実績',
+		desc: '参加イベント・大会と主な実績はこちら',
+	},
+	{
+		href: '/join',
+		icon: 'lucide:door-open',
+		title: '入部案内',
+		desc: '見学・入部の方法はこちら',
+	},
+];
+---
+
+<section class={sectionClass} id="highlights">
+	<div class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-5">
+		{
+			links.map((l) => (
+				<a class={`${cardClass} block no-underline`} href={l.href}>
+					<Icon class="mb-3.5 h-7 w-7 text-neon-cyan drop-shadow-[0_0_6px_rgba(0,240,255,0.5)]" name={l.icon} />
+					<h3 class="mb-2.5 font-display text-[1rem] tracking-wide text-ink">{l.title}</h3>
+					<p class="text-[0.88rem] leading-relaxed text-ink-muted">{l.desc}</p>
+				</a>
+			))
+		}
+	</div>
+</section>

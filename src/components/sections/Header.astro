@@ -1,0 +1,106 @@
+---
+import { Icon } from 'astro-icon/components';
+import { navLinkActiveClass, navLinkClass, navLinks } from '../../lib/ui';
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
+---
+
+<header
+	class="sticky top-3 z-20 mx-3 rounded-xl border border-neon-cyan/15 bg-bg/75 shadow-[0_8px_30px_-8px_rgba(0,240,255,0.2)] backdrop-blur-md sm:top-4 sm:mx-4"
+>
+	<div class="mx-auto flex max-w-[1080px] items-center justify-between gap-4 px-4 py-3 sm:px-6 sm:py-4">
+		<a class="flex items-center gap-3 font-akihabara text-[1.1rem] tracking-wide text-ink no-underline" href="/">
+			<span
+				class="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-md border border-neon-cyan bg-bg font-mono text-[0.95rem] font-extrabold text-neon-cyan shadow-[0_0_8px_rgba(0,240,255,0.6),inset_0_0_8px_rgba(0,240,255,0.3)]"
+			>
+				{'</>'}
+			</span>
+			<span class="sm:hidden">NITIC-PRO</span>
+			<span class="hidden sm:inline">茨城高専 プログラミング同好会</span>
+		</a>
+
+		<ul class="m-0 hidden list-none flex-wrap justify-center gap-6 p-0 sm:flex">
+			{
+				navLinks.map((link) => (
+					<li>
+						<a class={isActive(link.href) ? navLinkActiveClass : navLinkClass} href={link.href}>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+
+		<button
+			aria-controls="mobile-nav"
+			aria-expanded="false"
+			aria-label="メニューを開く"
+			class="flex h-9 w-9 shrink-0 items-center justify-center rounded border border-neon-cyan/30 text-neon-cyan sm:hidden"
+			id="nav-toggle"
+			type="button"
+		>
+			<Icon class="h-5 w-5" name="lucide:menu" />
+		</button>
+	</div>
+</header>
+
+<div
+	class="fixed inset-0 z-30 pointer-events-none bg-bg/70 opacity-0 backdrop-blur-sm transition-opacity duration-300 sm:hidden"
+	id="mobile-nav-backdrop"
+>
+</div>
+
+<nav
+	aria-label="モバイルメニュー"
+	class="fixed inset-y-0 right-0 z-40 flex w-72 max-w-[80vw] translate-x-full flex-col gap-1 border-l border-neon-cyan/20 bg-bg-card/95 p-6 backdrop-blur-md transition-transform duration-300 sm:hidden"
+	id="mobile-nav"
+>
+	<button
+		aria-label="メニューを閉じる"
+		class="self-end flex h-9 w-9 items-center justify-center rounded border border-neon-cyan/30 text-neon-cyan"
+		id="mobile-nav-close"
+		type="button"
+	>
+		<Icon class="h-5 w-5" name="lucide:x" />
+	</button>
+	<ul class="m-0 mt-4 flex list-none flex-col gap-1 p-0">
+		{
+			navLinks.map((link) => (
+				<li>
+					<a
+						class={`block rounded px-3 py-2.5 font-mono text-[0.9rem] ${
+							isActive(link.href) ? 'text-neon-cyan' : 'text-ink-muted'
+						}`}
+						href={link.href}
+					>
+						{link.label}
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</nav>
+
+<script>
+	const openBtn = document.getElementById('nav-toggle');
+	const closeBtn = document.getElementById('mobile-nav-close');
+	const drawer = document.getElementById('mobile-nav');
+	const backdrop = document.getElementById('mobile-nav-backdrop');
+
+	const setOpen = (open: boolean) => {
+		drawer?.classList.toggle('translate-x-full', !open);
+		backdrop?.classList.toggle('opacity-0', !open);
+		backdrop?.classList.toggle('pointer-events-none', !open);
+		openBtn?.setAttribute('aria-expanded', String(open));
+		document.body.style.overflow = open ? 'hidden' : '';
+	};
+
+	openBtn?.addEventListener('click', () => setOpen(true));
+	closeBtn?.addEventListener('click', () => setOpen(false));
+	backdrop?.addEventListener('click', () => setOpen(false));
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') setOpen(false);
+	});
+</script>

@@ -1,0 +1,29 @@
+---
+import { Icon } from 'astro-icon/components';
+import { navLinks } from '../../lib/ui';
+---
+
+<footer class="border-t border-neon-cyan/10 pt-10 text-center font-mono text-[0.8rem] text-ink-muted">
+	<nav class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+		{
+			navLinks.map((link) => (
+				<a class="text-ink-muted no-underline transition-colors hover:text-neon-cyan" href={link.href}>
+					{link.label}
+				</a>
+			))
+		}
+	</nav>
+	<a
+		class="mt-6 inline-flex items-center gap-2 text-ink-muted no-underline transition-colors hover:text-neon-cyan"
+		href="https://github.com/nitic-pro"
+		rel="noreferrer"
+		target="_blank"
+	>
+		<Icon class="h-4 w-4" name="lucide:github" />
+		github.com/nitic-pro
+	</a>
+	<p class="mt-4">
+		© {new Date().getFullYear()} プログラミング同好会
+		<span class="ml-1 inline-block h-[1em] w-2 animate-blink bg-neon-cyan align-text-bottom" />
+	</p>
+</footer>

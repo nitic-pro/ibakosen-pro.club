@@ -1,0 +1,43 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionHead from '../SectionHead.astro';
+import { cardClass, sectionClass } from '../../lib/ui';
+
+const activities = [
+	{
+		icon: 'lucide:laptop',
+		title: '週次もくもく会',
+		desc: '毎週集まって各自の作品開発や課題に取り組みます。わからないことはその場で聞き合える雰囲気です。',
+	},
+	{
+		icon: 'lucide:trophy',
+		title: '競技プログラミング',
+		desc: 'AtCoderなどのコンテストに参加し、腕試しをしています。初心者向けの解説会も開催中。',
+	},
+	{
+		icon: 'lucide:rocket',
+		title: 'ハッカソン参加',
+		desc: '学内外のハッカソンにチームで参加し、アイデアを形にする経験を積んでいます。',
+	},
+	{
+		icon: 'lucide:presentation',
+		title: '技術LT会',
+		desc: '部員が興味を持った技術について発表するライトニングトーク会を定期開催しています。',
+	},
+];
+---
+
+<section class={sectionClass} id="activities">
+	<SectionHead kicker="Activities" title="活動内容" />
+	<div class="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-5">
+		{
+			activities.map((a) => (
+				<div class={cardClass}>
+					<Icon class="mb-3.5 h-7 w-7 text-neon-cyan drop-shadow-[0_0_6px_rgba(0,240,255,0.5)]" name={a.icon} />
+					<h3 class="mb-2.5 font-display text-[1rem] tracking-wide text-ink">{a.title}</h3>
+					<p class="text-[0.88rem] leading-relaxed text-ink-muted">{a.desc}</p>
+				</div>
+			))
+		}
+	</div>
+</section>

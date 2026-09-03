@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+import PageShell from '../../layouts/PageShell.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import BlogPostCard from '../../components/BlogPostCard.astro';
+import { siteName } from '../../lib/ui';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+	for (const tag of post.data.tags) {
+		tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+	}
+}
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1]);
+---
+
+<PageShell description="活動報告やお知らせを掲載しています。" title={`ブログ | ${siteName}`}>
+	<PageHeader description="活動報告やお知らせなどを、思いついたときに発信していきます。" title="ブログ" />
+
+	<section class="!border-t-0 pt-8 pb-16">
+		<div class="mx-auto flex max-w-[720px] flex-col gap-8">
+			<div class="flex flex-col gap-4">
+				<input
+					aria-label="記事を検索"
+					class="rounded border border-neon-cyan/25 bg-bg-card/60 px-4 py-2.5 font-mono text-base text-ink placeholder:text-ink-muted focus:border-neon-cyan focus:outline-none"
+					id="blog-search"
+					placeholder="記事を検索... (タイトル・タグなど)"
+					type="text"
+				/>
+				{
+					tags.length > 0 && (
+						<div class="flex flex-wrap gap-2">
+							{tags.map(([tag, count]) => (
+								<a
+									class="rounded border border-neon-green/30 bg-bg-card/60 px-2.5 py-1 font-mono text-[0.72rem] text-neon-green transition-colors hover:border-neon-green hover:shadow-[0_0_10px_rgba(57,255,136,0.3)]"
+									href={`/blog/tags/${tag}`}
+								>
+									#{tag} ({count})
+								</a>
+							))}
+						</div>
+					)
+				}
+			</div>
+
+			<div class="flex flex-col gap-5" id="post-list">
+				{posts.map((post) => <BlogPostCard post={post} />)}
+			</div>
+
+			<p class="hidden text-center font-mono text-[0.9rem] text-ink-muted" id="no-results">
+				該当する記事が見つかりませんでした。
+			</p>
+		</div>
+	</section>
+</PageShell>
+
+<script>
+	const searchInput = document.getElementById('blog-search') as HTMLInputElement | null;
+	const postList = document.getElementById('post-list');
+	const noResults = document.getElementById('no-results');
+
+	searchInput?.addEventListener('input', () => {
+		const query = searchInput.value.trim().toLowerCase();
+		const cards = postList?.querySelectorAll<HTMLElement>('[data-post-card]') ?? [];
+		let visibleCount = 0;
+
+		for (const card of cards) {
+			const matches = !query || (card.dataset.search ?? '').includes(query);
+			card.classList.toggle('hidden', !matches);
+			if (matches) visibleCount++;
+		}
+
+		noResults?.classList.toggle('hidden', visibleCount > 0);
+	});
+</script>

@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import PageShell from '../../layouts/PageShell.astro';
+import { formatJaDate } from '../../lib/blog';
+import { siteName } from '../../lib/ui';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({
+		params: { id: post.id },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<PageShell description={post.data.description} title={`${post.data.title} | ${siteName}`}>
+	<article class="pt-16 pb-16">
+		<a class="font-mono text-[0.82rem] text-neon-cyan no-underline hover:underline" href="/blog">← ブログ一覧</a>
+		<header class="mt-6 mb-10 border-b border-neon-cyan/10 pb-8">
+			<p class="font-mono text-[0.8rem] text-ink-muted">{formatJaDate(post.data.pubDate)}</p>
+			<h1
+				class="mt-2 font-display text-[clamp(1.7rem,4vw,2.4rem)] font-black tracking-tight text-ink [text-shadow:0_0_10px_rgba(0,240,255,0.4)]"
+			>
+				{post.data.title}
+			</h1>
+			{
+				post.data.tags.length > 0 && (
+					<div class="mt-4 flex flex-wrap gap-2">
+						{post.data.tags.map((tag) => (
+							<span class="rounded border border-neon-green/30 bg-bg-card/60 px-2.5 py-1 font-mono text-[0.72rem] text-neon-green">
+								#{tag}
+							</span>
+						))}
+					</div>
+				)
+			}
+		</header>
+		<div class="prose-cyber mx-auto max-w-[680px]">
+			<Content />
+		</div>
+	</article>
+</PageShell>

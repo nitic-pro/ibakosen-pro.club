@@ -1,0 +1,19 @@
+---
+import PageShell from '../layouts/PageShell.astro';
+import PageHeader from '../components/PageHeader.astro';
+import EventsAndCompetitions from '../components/sections/EventsAndCompetitions.astro';
+import Achievements from '../components/sections/Achievements.astro';
+import { siteName } from '../lib/ui';
+---
+
+<PageShell
+	description="参加イベント・大会と主な実績を紹介しています。"
+	title={`イベント・実績 | ${siteName}`}
+>
+	<PageHeader
+		description="これまでに参加したイベント・大会と、そこで積み重ねてきた実績をまとめています。"
+		title="イベント・実績"
+	/>
+	<EventsAndCompetitions />
+	<Achievements />
+</PageShell>

@@ -1,0 +1,44 @@
+---
+import { btnBaseClass } from "../../lib/ui";
+---
+
+<section class="pt-24 pb-16 text-center" id="top">
+    <span
+        class="mb-7 inline-flex items-center gap-2 rounded-full border border-neon-green/35 bg-neon-green/5 px-4 py-1.5 font-mono text-[0.78rem] tracking-wider text-neon-green"
+    >
+        <span
+            class="h-[7px] w-[7px] animate-pulse-dot rounded-full bg-neon-green shadow-[0_0_8px_var(--color-neon-green)]"
+        ></span>
+        SYSTEM ONLINE — NITIC-PRO
+    </span>
+    <h1
+        class="mb-5 font-display text-[clamp(2.1rem,5.5vw,3.6rem)] font-black tracking-tight text-ink [text-shadow:0_0_12px_rgba(0,240,255,0.55),0_0_32px_rgba(255,46,230,0.25)]"
+    >
+        作りたいものを、
+        <br />
+        <span
+            class="bg-gradient-to-r from-neon-cyan via-neon-magenta to-neon-green bg-clip-text text-transparent"
+        >
+            作れる場所へ。
+        </span>
+    </h1>
+    <p class="mx-auto mb-9 max-w-[580px] text-[1rem] text-ink-muted">
+        経験や学年は問いません。ものづくりが好きな人、コードを書いてみたい人が集まって、
+        一緒に学び、開発し、成長していく同好会です。週1回のもくもく会から、CTFやハッカソンなどの大会挑戦まで、
+        興味に合わせて自由に参加できます。初めてのコードも、全国大会を目指す本気の開発も、ここなら仲間と一緒に前へ進めます。
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+        <a
+            class={`${btnBaseClass} bg-neon-cyan text-bg shadow-[0_0_18px_rgba(0,240,255,0.55)] hover:shadow-[0_0_28px_rgba(0,240,255,0.85)]`}
+            href="/join"
+        >
+            入部について見る
+        </a>
+        <a
+            class={`${btnBaseClass} border border-neon-magenta/50 bg-transparent text-ink hover:border-neon-magenta hover:text-neon-magenta hover:shadow-[0_0_18px_rgba(255,46,230,0.4)]`}
+            href="/about#activities"
+        >
+            活動内容を見る
+        </a>
+    </div>
+</section>

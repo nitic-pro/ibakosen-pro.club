@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHead from '../SectionHead.astro';
+import { cardClass, sectionClass } from '../../lib/ui';
+
+const eventEntries = await getCollection('events');
+const competitionEntries = await getCollection('competitions');
+const events = eventEntries.map((entry) => entry.data.name);
+const competitions = competitionEntries.map((entry) => entry.data.name);
+---
+
+<section class={sectionClass} id="events">
+	<SectionHead kicker="Events" title="参加イベント・大会" />
+	<div class="grid gap-6 sm:grid-cols-2">
+		<div class={cardClass}>
+			<h3 class="mb-4 font-display text-[1rem] tracking-wide text-neon-green">イベント</h3>
+			<div class="flex flex-wrap gap-2.5">
+				{
+					events.map((name) => (
+						<span class="rounded border border-neon-cyan/25 bg-bg/60 px-3 py-1.5 font-mono text-[0.82rem] text-ink">
+							{name}
+						</span>
+					))
+				}
+			</div>
+			<p class="mt-4 font-mono text-[0.78rem] text-ink-muted">など</p>
+		</div>
+		<div class={cardClass}>
+			<h3 class="mb-4 font-display text-[1rem] tracking-wide text-neon-magenta">大会</h3>
+			<div class="flex flex-wrap gap-2.5">
+				{
+					competitions.map((name) => (
+						<span class="rounded border border-neon-cyan/25 bg-bg/60 px-3 py-1.5 font-mono text-[0.82rem] text-ink">
+							{name}
+						</span>
+					))
+				}
+			</div>
+			<p class="mt-4 font-mono text-[0.78rem] text-ink-muted">など</p>
+		</div>
+	</div>
+</section>

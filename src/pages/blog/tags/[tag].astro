@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import PageShell from '../../../layouts/PageShell.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import BlogPostCard from '../../../components/BlogPostCard.astro';
+import { siteName } from '../../../lib/ui';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+
+	return tags.map((tag) => ({
+		params: { tag },
+		props: {
+			tag,
+			posts: posts
+				.filter((post) => post.data.tags.includes(tag))
+				.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()),
+		},
+	}));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<PageShell description={`タグ「${tag}」の記事一覧です。`} title={`#${tag} | ブログ | ${siteName}`}>
+	<PageHeader description={`「${tag}」タグが付いた記事一覧です。`} title={`#${tag}`} />
+
+	<section class="!border-t-0 pt-8 pb-16">
+		<div class="mx-auto flex max-w-[720px] flex-col gap-5">
+			<a class="font-mono text-[0.82rem] text-neon-cyan no-underline hover:underline" href="/blog">← ブログ一覧に戻る</a>
+			{posts.map((post) => <BlogPostCard post={post} />)}
+		</div>
+	</section>
+</PageShell>

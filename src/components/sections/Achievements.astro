@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHead from '../SectionHead.astro';
+import { sectionClass } from '../../lib/ui';
+import { groupAchievementsByYear } from '../../lib/achievements';
+import AchievementsInteractive from './AchievementsInteractive';
+
+const achievementEntries = await getCollection('achievements');
+const achievementsByYear = groupAchievementsByYear(achievementEntries.map((entry) => entry.data));
+---
+
+<section class={sectionClass} id="achievements">
+	<SectionHead kicker="Achievements" title="主な実績" />
+	<AchievementsInteractive achievementsByYear={achievementsByYear} client:load />
+</section>

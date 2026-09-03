@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BlogPostCard from '../BlogPostCard.astro';
+import { sectionClass } from '../../lib/ui';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+	.slice(0, 6);
+---
+
+{
+	posts.length > 0 && (
+		<section class={sectionClass} id="blog-preview">
+			<div class="mb-6 flex items-end justify-between gap-4">
+				<h2 class="font-display text-[1.4rem] font-bold text-ink">ブログ</h2>
+				<a class="font-mono text-[0.82rem] text-neon-cyan no-underline hover:underline" href="/blog">
+					すべて見る →
+				</a>
+			</div>
+			<div class="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6">
+				{posts.map((post) => (
+					<div class="w-[280px] flex-shrink-0 snap-start">
+						<BlogPostCard post={post} />
+					</div>
+				))}
+			</div>
+		</section>
+	)
+}

@@ -1,0 +1,11 @@
+---
+import PageShell from '../layouts/PageShell.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Join from '../components/sections/Join.astro';
+import { siteName } from '../lib/ui';
+---
+
+<PageShell description="入部方法や見学について案内しています。" title={`入部案内 | ${siteName}`}>
+	<PageHeader description="見学だけでも大歓迎です。気になったらお気軽にどうぞ。" title="入部案内" />
+	<Join />
+</PageShell>

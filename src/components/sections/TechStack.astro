@@ -1,0 +1,29 @@
+---
+import SectionHead from "../SectionHead.astro";
+import { sectionClass } from "../../lib/ui";
+
+const techs = [
+    "Python",
+    "JavaScript / TypeScript",
+    "React",
+    "C / C++",
+    "Unity",
+    "Raspberry Pi",
+    "Arduino",
+    "Git / GitHub",
+    "その他",
+];
+---
+
+<section class={sectionClass} id="tech">
+    <SectionHead kicker="Tech" title="よく使う技術" />
+    <div class="flex flex-wrap justify-center gap-3">
+        {
+            techs.map((t) => (
+                <span class="rounded border border-neon-green/30 bg-bg-card/60 px-4 py-2 font-mono text-[0.82rem] text-neon-green transition-all before:mr-0.5 before:opacity-60 before:content-['#'] hover:border-neon-green hover:shadow-[0_0_12px_rgba(57,255,136,0.35)]">
+                    {t}
+                </span>
+            ))
+        }
+    </div>
+</section>

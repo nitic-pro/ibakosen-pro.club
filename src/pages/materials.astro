@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import PageShell from '../layouts/PageShell.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { cardClass, siteName } from '../lib/ui';
+import { formatJaDate } from '../lib/blog';
+
+const items = (await getCollection('materials')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const fileIcon = (url: string) => (url.toLowerCase().endsWith('.pdf') ? 'lucide:file-text' : 'lucide:external-link');
+---
+
+<PageShell
+	description="コンテストや発表会で使用したスライド・ポスター・LPなどの資料をまとめています。"
+	title={`資料 | ${siteName}`}
+>
+	<PageHeader
+		description="コンテストや発表会に出たときのスライド・ポスター・LPなどをここにまとめています。"
+		title="資料"
+	/>
+
+	<section class="!border-t-0 pt-8 pb-16">
+		<div class="mx-auto flex max-w-[720px] flex-col gap-5">
+			{
+				items.length === 0 && (
+					<p class="text-center font-mono text-[0.9rem] text-ink-muted">まだ資料はありません。</p>
+				)
+			}
+			{
+				items.map((item) => (
+					<div class={cardClass}>
+						<p class="font-mono text-[0.78rem] text-ink-muted">
+							{formatJaDate(item.data.date)} ・ {item.data.event}
+						</p>
+						<h2 class="mt-1.5 font-display text-[1.1rem] font-bold text-ink">{item.data.title}</h2>
+						{item.data.description && (
+							<p class="mt-2 text-[0.88rem] leading-relaxed text-ink-muted">{item.data.description}</p>
+						)}
+						<div class="mt-4 flex flex-wrap gap-3">
+							{item.data.files.map((file) => (
+								<a
+									class="inline-flex items-center gap-1.5 rounded border border-neon-cyan/25 bg-bg/60 px-3 py-1.5 font-mono text-[0.8rem] text-neon-cyan no-underline transition-colors hover:border-neon-cyan hover:shadow-[0_0_10px_rgba(0,240,255,0.3)]"
+									href={file.url}
+									rel="noreferrer"
+									target="_blank"
+								>
+									<Icon class="h-4 w-4" name={fileIcon(file.url)} />
+									{file.label}
+								</a>
+							))}
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</section>
+</PageShell>

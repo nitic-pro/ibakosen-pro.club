@@ -1,0 +1,17 @@
+---
+interface Props {
+	kicker: string;
+	title: string;
+}
+
+const { kicker, title } = Astro.props;
+---
+
+<div class="mb-10 text-center">
+	<span
+		class="font-mono text-[0.78rem] font-bold tracking-[0.18em] text-neon-magenta uppercase before:mr-1 before:text-ink-muted before:content-['//']"
+	>
+		{kicker}
+	</span>
+	<h2 class="mt-2.5 font-display text-[1.9rem] font-bold text-ink">{title}</h2>
+</div>

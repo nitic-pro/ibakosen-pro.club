@@ -1,0 +1,56 @@
+---
+import { Icon } from 'astro-icon/components';
+import SectionHead from '../SectionHead.astro';
+import { cardClass, sectionClass } from '../../lib/ui';
+
+const divisions = [
+	{
+		icon: 'lucide:smartphone',
+		title: 'アプリ開発',
+		desc: 'スマホアプリ・デスクトップアプリなど、日常で使えるプロダクトを企画から実装まで手がけます。',
+	},
+	{
+		icon: 'lucide:globe',
+		title: 'Web開発',
+		desc: 'Webサイト・Webアプリの制作。フロントエンドからバックエンド・インフラまで幅広く扱います。',
+	},
+	{
+		icon: 'lucide:brain-circuit',
+		title: 'AI/ML開発',
+		desc: '機械学習や生成AIを活用したツール・モデルの研究開発に取り組みます。',
+	},
+	{
+		icon: 'lucide:gamepad-2',
+		title: 'ゲーム開発',
+		desc: 'Unityなどを使ったゲーム制作。Game Jamなどのイベントにもチームで挑戦します。',
+	},
+	{
+		icon: 'lucide:swords',
+		title: '競プロ',
+		desc: 'AtCoderなどの競技プログラミングで、アルゴリズムとデータ構造の力を鍛えます。',
+	},
+	{
+		icon: 'lucide:shield',
+		title: 'CTF',
+		desc: '脆弱性解析・暗号・フォレンジックなどを競うCTF(Capture The Flag)に挑戦し、セキュリティを学びます。',
+	},
+];
+---
+
+<section class={sectionClass} id="divisions">
+	<SectionHead kicker="Divisions" title="活動分野" />
+	<p class="mx-auto mb-10 max-w-[640px] text-center text-ink-muted">
+		同好会の中に、興味の方向性ごとに大きく6つの分野があります。1つに絞る必要はなく、掛け持ちも自由です。
+	</p>
+	<div class="grid grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-5">
+		{
+			divisions.map((d) => (
+				<div class={cardClass}>
+					<Icon class="mb-3.5 h-7 w-7 text-neon-cyan drop-shadow-[0_0_6px_rgba(0,240,255,0.5)]" name={d.icon} />
+					<h3 class="mb-2.5 font-display text-[1rem] tracking-wide text-ink">{d.title}</h3>
+					<p class="text-[0.88rem] leading-relaxed text-ink-muted">{d.desc}</p>
+				</div>
+			))
+		}
+	</div>
+</section>
