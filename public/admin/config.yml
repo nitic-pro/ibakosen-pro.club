@@ -3,12 +3,12 @@
 
 backend:
   name: github
-  # TODO: replace with the real "owner/repo" once this is pushed to GitHub.
-  repo: nitic-pro/nitic-pro
-  branch: main
-  # TODO: replace with the real production domain once the site is deployed.
-  site_domain: https://example.com
-  base_url: https://example.com
+  repo: nitic-pro/ibakosen-pro.club
+  branch: master
+  # Interim domain until ibakosen-pro.club itself is purchased -- see
+  # ibakosen-pro.club.fukayatti0.dev in the Cloudflare setup notes.
+  site_domain: https://ibakosen-pro.club.fukayatti0.dev
+  base_url: https://ibakosen-pro.club.fukayatti0.dev
   auth_endpoint: /api/auth
 
 # Fallback media location for any field that doesn't override it below.
