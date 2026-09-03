@@ -8,7 +8,8 @@ import { formatJaDate } from '../lib/blog';
 
 const items = (await getCollection('materials')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const fileIcon = (url: string) => (url.toLowerCase().endsWith('.pdf') ? 'lucide:file-text' : 'lucide:external-link');
+const isPdf = (url: string) => url.toLowerCase().endsWith('.pdf');
+const fileIcon = (url: string) => (isPdf(url) ? 'lucide:file-text' : 'lucide:external-link');
 ---
 
 <PageShell
@@ -38,21 +39,107 @@ const fileIcon = (url: string) => (url.toLowerCase().endsWith('.pdf') ? 'lucide:
 							<p class="mt-2 text-[0.88rem] leading-relaxed text-ink-muted">{item.data.description}</p>
 						)}
 						<div class="mt-4 flex flex-wrap gap-3">
-							{item.data.files.map((file) => (
-								<a
-									class="inline-flex items-center gap-1.5 rounded border border-neon-cyan/25 bg-bg/60 px-3 py-1.5 font-mono text-[0.8rem] text-neon-cyan no-underline transition-colors hover:border-neon-cyan hover:shadow-[0_0_10px_rgba(0,240,255,0.3)]"
-									href={file.url}
-									rel="noreferrer"
-									target="_blank"
-								>
-									<Icon class="h-4 w-4" name={fileIcon(file.url)} />
-									{file.label}
-								</a>
-							))}
+							{item.data.files.map((file) =>
+								isPdf(file.url) ? (
+									<button
+										class="inline-flex items-center gap-1.5 rounded border border-neon-cyan/25 bg-bg/60 px-3 py-1.5 font-mono text-[0.8rem] text-neon-cyan transition-colors hover:border-neon-cyan hover:shadow-[0_0_10px_rgba(0,240,255,0.3)]"
+										data-pdf-label={file.label}
+										data-pdf-trigger
+										data-pdf-url={file.url}
+										type="button"
+									>
+										<Icon class="h-4 w-4" name={fileIcon(file.url)} />
+										{file.label}
+									</button>
+								) : (
+									<a
+										class="inline-flex items-center gap-1.5 rounded border border-neon-cyan/25 bg-bg/60 px-3 py-1.5 font-mono text-[0.8rem] text-neon-cyan no-underline transition-colors hover:border-neon-cyan hover:shadow-[0_0_10px_rgba(0,240,255,0.3)]"
+										href={file.url}
+										rel="noreferrer"
+										target="_blank"
+									>
+										<Icon class="h-4 w-4" name={fileIcon(file.url)} />
+										{file.label}
+									</a>
+								),
+							)}
 						</div>
 					</div>
 				))
 			}
 		</div>
 	</section>
+
+	<div
+		aria-modal="true"
+		class="fixed inset-0 z-50 hidden items-center justify-center p-4"
+		id="pdf-modal"
+		role="dialog"
+	>
+		<button
+			aria-label="プレビューを閉じる"
+			class="absolute inset-0 bg-bg/85 backdrop-blur-sm"
+			id="pdf-modal-backdrop"
+			type="button"
+		></button>
+		<div class="relative flex h-[85vh] w-full max-w-3xl flex-col rounded border border-neon-cyan/30 bg-bg-card shadow-[0_0_40px_rgba(0,240,255,0.18)]">
+			<div class="flex items-center justify-between gap-4 border-b border-neon-cyan/15 px-4 py-3">
+				<p class="truncate font-mono text-[0.85rem] text-ink" id="pdf-modal-title">
+					&nbsp;
+				</p>
+				<div class="flex shrink-0 items-center gap-3">
+					<a
+						class="font-mono text-[0.78rem] text-neon-cyan no-underline hover:underline"
+						id="pdf-modal-open"
+						rel="noreferrer"
+						target="_blank"
+					>
+						新しいタブで開く ↗
+					</a>
+					<button
+						aria-label="プレビューを閉じる"
+						class="flex h-8 w-8 items-center justify-center rounded border border-neon-cyan/30 text-neon-cyan"
+						id="pdf-modal-close"
+						type="button"
+					>
+						<Icon class="h-4 w-4" name="lucide:x" />
+					</button>
+				</div>
+			</div>
+			<iframe class="h-full w-full flex-1 bg-bg" id="pdf-modal-frame" title="PDFプレビュー"></iframe>
+		</div>
+	</div>
 </PageShell>
+
+<script>
+	const modal = document.getElementById('pdf-modal');
+	const frame = document.getElementById('pdf-modal-frame') as HTMLIFrameElement | null;
+	const title = document.getElementById('pdf-modal-title');
+	const openLink = document.getElementById('pdf-modal-open') as HTMLAnchorElement | null;
+
+	const closeModal = () => {
+		modal?.classList.add('hidden');
+		modal?.classList.remove('flex');
+		if (frame) frame.src = 'about:blank';
+		document.body.style.overflow = '';
+	};
+
+	document.querySelectorAll<HTMLButtonElement>('[data-pdf-trigger]').forEach((button) => {
+		button.addEventListener('click', () => {
+			const url = button.dataset.pdfUrl;
+			if (!url || !frame || !title || !openLink) return;
+			frame.src = url;
+			title.textContent = button.dataset.pdfLabel ?? '';
+			openLink.href = url;
+			modal?.classList.remove('hidden');
+			modal?.classList.add('flex');
+			document.body.style.overflow = 'hidden';
+		});
+	});
+
+	document.getElementById('pdf-modal-backdrop')?.addEventListener('click', closeModal);
+	document.getElementById('pdf-modal-close')?.addEventListener('click', closeModal);
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') closeModal();
+	});
+</script>
